@@ -1,0 +1,14 @@
+# Local secrets and vehicle data
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+vehicle-data*.json
+
+# Tooling
+node_modules/
+.DS_Store
+.wrangler/
