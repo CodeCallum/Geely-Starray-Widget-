@@ -1,0 +1,16 @@
+
+name: Geely Widget Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check scheduled runner
+        run: |
+          echo "Geely widget runner is working!"
+          date -u
