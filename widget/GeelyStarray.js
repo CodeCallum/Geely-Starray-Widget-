@@ -1,6 +1,6 @@
 // Geely Starray EM-i widget for Scriptable
 // Set these two values before running.
-const API_URL = "https://YOUR-WORKER.workers.dev";
+const API_URL = "https://geely-starray-widget.callumbns.workers.dev";
 const WIDGET_TOKEN = "PASTE_WIDGET_TOKEN_HERE";
 
 const req = new Request(`${API_URL}/api/status`);
