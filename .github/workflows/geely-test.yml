@@ -1,16 +1,16 @@
 
-name: Geely Widget Test
+name: Geely Connection Test
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "*/10 * * * *"
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check scheduled runner
+      - name: Check Geely APAC servers
         run: |
-          echo "Geely widget runner is working!"
-          date -u
+          echo "Checking Geely login server..."
+          curl -sS -o /dev/null -w "Login server HTTP: %{http_code}\n" https://api.ecloudkr.com/
+          echo "Checking Geely vehicle server..."
+          curl -sS -o /dev/null -w "Vehicle server HTTP: %{http_code}\n" https://apis.ecloudkr.com/
