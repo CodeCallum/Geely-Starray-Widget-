@@ -1,0 +1,8 @@
+name = "geely-starray-widget-api"
+main = "src/index.js"
+compatibility_date = "2026-11-15"
+
+# Create a KV namespace in Cloudflare, then replace this placeholder with its ID.
+[[kv_namespaces]]
+binding = "VEHICLE_DATA"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
