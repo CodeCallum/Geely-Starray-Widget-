@@ -37,9 +37,26 @@ try {
   }
   const data = await req.loadJSON();
 
-  const title = widget.addText("GEELY STARRAY EM-i");
+  const header = widget.addStack();
+  header.layoutHorizontally();
+  header.centerAlignContent();
+  const title = header.addText("GEELY STARRAY EM-i");
   title.font = Font.boldSystemFont(12);
   title.textColor = Color.white();
+  header.addSpacer();
+  if (data.vehicle_image_url) {
+    try {
+      const imageRequest = new Request(data.vehicle_image_url);
+      imageRequest.timeoutInterval = 8;
+      const carImage = await imageRequest.loadImage();
+      const image = header.addImage(carImage);
+      image.imageSize = new Size(76, 42);
+      image.resizable = true;
+      image.applyFittingContentMode();
+    } catch (_) {
+      // The telemetry widget remains usable if the optional image cannot load.
+    }
+  }
   widget.addSpacer(10);
 
   const row1 = widget.addStack();
