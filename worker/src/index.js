@@ -47,22 +47,43 @@ export default {
         return json({ error: "invalid_json" }, 400);
       }
 
-      const allowed = [
+      const numericFields = [
         "petrol_range_km",
         "battery_percent",
         "electric_range_km",
-        "odometer_km",
-        "vehicle_image_url",
-        "updated_at"
+        "odometer_km"
       ];
       const clean = {};
-      for (const key of allowed) {
-        if (payload[key] !== undefined) clean[key] = payload[key];
+      for (const key of numericFields) {
+        if (payload[key] === undefined || payload[key] === null) continue;
+        const value = Number(payload[key]);
+        if (!Number.isFinite(value) || value < 0) {
+          return json({ error: `invalid_${key}` }, 400);
+        }
+        if (key === "battery_percent" && value > 100) {
+          return json({ error: "invalid_battery_percent" }, 400);
+        }
+        clean[key] = value;
       }
-      if (!Object.keys(clean).length) {
+      if (payload.vehicle_image_url !== undefined && payload.vehicle_image_url !== null) {
+        try {
+          const imageUrl = new URL(payload.vehicle_image_url);
+          if (imageUrl.protocol !== "https:") throw new Error("https_required");
+          clean.vehicle_image_url = imageUrl.toString();
+        } catch {
+          return json({ error: "invalid_vehicle_image_url" }, 400);
+        }
+      }
+      if (payload.updated_at !== undefined) {
+        const parsed = Date.parse(payload.updated_at);
+        if (!Number.isFinite(parsed)) return json({ error: "invalid_updated_at" }, 400);
+        clean.updated_at = new Date(parsed).toISOString();
+      } else {
+        clean.updated_at = new Date().toISOString();
+      }
+      if (Object.keys(clean).length === 1 && clean.updated_at) {
         return json({ error: "no_supported_fields" }, 400);
       }
-      clean.updated_at = clean.updated_at || new Date().toISOString();
       await env.VEHICLE_DATA.put(DATA_KEY, JSON.stringify(clean));
       return json({ ok: true, updated_at: clean.updated_at });
     }
